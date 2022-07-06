@@ -2,15 +2,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import bg from './image/bg.png';
-import { useState } from 'react';
+import React, { Component, useState } from 'react';
 import data from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './routes/Detail.js'
 import About from './pages/About';
+import axios from 'axios';
 
 function App() {
 
-  let [shoes] = useState(data)
+  let [shoes, setShoes] = useState(data)
+  let [newShoes, setNewShoes] = useState('');
   let navigate = useNavigate();
 
   return (
@@ -40,6 +42,24 @@ function App() {
                   })}
               </div>
             </div>
+            <button onClick={() => {
+              axios.get('https://codingapple1.github.io/shop/data2.json')
+                .then((data) => {
+                  setShoes([...shoes, ...data.data])
+                })
+                .catch(() => {
+                  console.log('실패')
+                })
+
+              // Promise.all([ axios.get('/url1' , axios.get('/url2'))])
+              // .then(() => {
+
+              // })
+
+              // fetch('https://codingapple1.github.io/shop/data2.json')
+              // JSON -> array / object 변환 필요 <---> axios는 자동으로 변환해줌
+
+            }}>서버 요청 버튼</button>
           </>} />
         <Route path="/detail/:id" element={<Detail shoes={shoes}></Detail>} />
         <Route path="/about" element={<About></About>}>
