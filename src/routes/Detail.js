@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import React, { Component, useState  , useEffect} from 'react';
 import { Nav } from 'react-bootstrap';
+import  '../App.css';
 
 let Btn = styled.button`
     background : ${props => props.bg};
@@ -89,8 +90,26 @@ function TabContent(props){
     // else if(props.tab == 2){
     //     return <div>내용2</div>
     // }
-
-    return [<div>내용0</div>, <div>내용1</div> , <div>내용2</div>][props.tab]
+    
+    let [fade , setFade] = useState('');
+    let [fade2 , setFade2] = useState('');
+    useEffect(() => {
+        let a = setTimeout(() => {
+            setFade('end');
+            setFade2('container')
+            //automatic batching 기능
+            //state 변경함수가 가까이 있을 때 state가 다 바뀌어야 재렌더링 된다
+        }, 100)
+        return (() => {
+            setFade('')
+            setFade2('');
+        })
+    },[props])
+    
+    return (
+    <div className={`start  ${fade}`}>
+        {[<div>내용0</div>, <div>내용1</div> , <div>내용2</div>][props.tab]}
+    </div>)
 }
 
 
