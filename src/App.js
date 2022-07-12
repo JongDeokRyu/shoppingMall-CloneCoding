@@ -6,6 +6,7 @@ import React, { Component, useState } from 'react';
 import data from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './routes/Detail.js'
+import Cart from './routes/Cart.js'
 import About from './pages/About';
 import axios from 'axios';
 
@@ -67,7 +68,10 @@ function App() {
           <Route path="location" element={<div>위치정보임</div>}></Route>
         </Route>
         <Route path="*" element={<div>없는 페이지</div>} />
+        <Route path="/cart" element={<Cart></Cart>}></Route>
+
       </Routes>
+
     </div >
   );
 }
