@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import bg from './image/bg.png';
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import data from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './routes/Detail.js'
@@ -11,6 +11,9 @@ import About from './pages/About';
 import axios from 'axios';
 
 function App() {
+
+  // TODO: 이미 localstorage에 데이터가 있으면 초기화 ㄴㄴ
+  // TODO: 상품 클릭시 디테일 페이지 navigate
 
   let [shoes, setShoes] = useState(data)
   let [newShoes, setNewShoes] = useState('');
