@@ -2,14 +2,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import bg from './image/bg.png';
-import React, { Component, useEffect, useState } from 'react';
+import React, { lazy, Suspense, Component, useEffect, useState } from 'react';
 import data from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
-import Detail from './routes/Detail.js'
-import Cart from './routes/Cart.js'
+// import Detail from './routes/Detail.js'
+// import Cart from './routes/Cart.js'
 import About from './pages/About';
 import axios from 'axios';
 import { useQuery } from 'react-query'
+
+
+const Detail = lazy(() => import('./routes/Detail.js'))
+const Cart = lazy(() => import('./routes/Cart.js'))
+// 단점 : Cart , Detail 컴포넌트 로딩시간 발생
+
 function App() {
 
   // TODO: 이미 localstorage에 데이터가 있으면 초기화 ㄴㄴ
@@ -46,49 +52,50 @@ function App() {
           </Nav>
         </Container>
       </Navbar>
-      <Routes>
-        <Route path="/" element={
-          <>
-            <div className='main-bg' style={{ backgroundImage: `url(${bg})` }}></div>
-            <div className="container">
-              <div className="row">
-                {
-                  shoes.map((shoe) => {
-                    return (
-                      <Card key={shoe.id} shoes={shoe} i={shoe.id}></Card>
-                    )
-                  })}
+
+      <Suspense fallback={<div>로딩중임</div>}>
+        <Routes>
+          <Route path="/" element={
+            <>
+              <div className='main-bg' style={{ backgroundImage: `url(${bg})` }}></div>
+              <div className="container">
+                <div className="row">
+                  {
+                    shoes.map((shoe) => {
+                      return (
+                        <Card key={shoe.id} shoes={shoe} i={shoe.id}></Card>
+                      )
+                    })}
+                </div>
               </div>
-            </div>
-            <button onClick={() => {
-              axios.get('https://codingapple1.github.io/shop/data2.json')
-                .then((data) => {
-                  setShoes([...shoes, ...data.data])
-                })
-                .catch(() => {
-                  console.log('실패')
-                })
+              <button onClick={() => {
+                axios.get('https://codingapple1.github.io/shop/data2.json')
+                  .then((data) => {
+                    setShoes([...shoes, ...data.data])
+                  })
+                  .catch(() => {
+                    console.log('실패')
+                  })
 
-              // Promise.all([ axios.get('/url1' , axios.get('/url2'))])
-              // .then(() => {
+                // Promise.all([ axios.get('/url1' , axios.get('/url2'))])
+                // .then(() => {
 
-              // })
+                // })
 
-              // fetch('https://codingapple1.github.io/shop/data2.json')
-              // JSON -> array / object 변환 필요 <---> axios는 자동으로 변환해줌
+                // fetch('https://codingapple1.github.io/shop/data2.json')
+                // JSON -> array / object 변환 필요 <---> axios는 자동으로 변환해줌
 
-            }}>서버 요청 버튼</button>
-          </>} />
-        <Route path="/detail/:id" element={<Detail shoes={shoes}></Detail>} />
-        <Route path="/about" element={<About></About>}>
-          <Route path="member" element={<div>멤버임</div>}></Route>
-          <Route path="location" element={<div>위치정보임</div>}></Route>
-        </Route>
-        <Route path="*" element={<div>없는 페이지</div>} />
-        <Route path="/cart" element={<Cart></Cart>}></Route>
-
-      </Routes>
-
+              }}>서버 요청 버튼</button>
+            </>} />
+          <Route path="/detail/:id" element={<Detail shoes={shoes}></Detail>} />
+          <Route path="/about" element={<About></About>}>
+            <Route path="member" element={<div>멤버임</div>}></Route>
+            <Route path="location" element={<div>위치정보임</div>}></Route>
+          </Route>
+          <Route path="*" element={<div>없는 페이지</div>} />
+          <Route path="/cart" element={<Cart></Cart>}></Route>
+        </Routes>
+      </Suspense>
     </div >
   );
 }
